@@ -98,8 +98,3 @@ class Cache:
             return self.get(value, fn=lambda x: int(x))
         except Exception:
             return 0
-cache = Cache()
-cache.store("foo")
-cache.store("bar")
-cache.store(42)
-replay(cache.store)
