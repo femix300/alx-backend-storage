@@ -21,7 +21,7 @@ class Cache:
         return key
 
     def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
-        if not self.exists(key):
+        if not self._redis.exists(key):
             return None
         value = self._redis.get(key)
 
