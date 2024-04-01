@@ -10,13 +10,14 @@ def replay(method: Callable):
     '''
     Display the history of calls of a particular function
     '''
+    cache = redis.Redis()
     method_name = method.__qualname__
 
     inputs = f'{method_name}:inputs'
     outputs = f'{method_name}:outputs'
 
-    inputs = cache._redis.lrange(inputs, 0, -1)
-    outputs = cache._redis.lrange(outputs, 0, -1)
+    inputs = cache.lrange(inputs, 0, -1)
+    outputs = cache.lrange(outputs, 0, -1)
 
     print(f'{method_name} was called {len(inputs)} times:')
     for input_data, output_data in zip(inputs, outputs):
@@ -97,3 +98,8 @@ class Cache:
             return self.get(value, fn=lambda x: int(x))
         except Exception:
             return 0
+cache = Cache()
+cache.store("foo")
+cache.store("bar")
+cache.store(42)
+replay(cache.store)
