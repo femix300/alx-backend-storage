@@ -21,7 +21,8 @@ def replay(method: Callable):
 
     print(f'{method_name} was called {len(inputs)} times:')
     for input_data, output_data in zip(inputs, outputs):
-        print(f'{method_name}(*{input_data.decode()}) -> {output_data.decode()}')
+        print(f'{method_name}(*{input_data.decode()}) -> \
+              {output_data.decode()}')
 
 
 def call_history(method: Callable) -> Callable:
@@ -79,6 +80,7 @@ class Cache:
 
     def get(self, key: str, fn: Optional[Callable] = None) -> \
             Union[str, bytes, int, float]:
+        '''Calls a function that converts the key to desired format'''
         if not self._redis.exists(key):
             return None
         value = self._redis.get(key)
@@ -89,10 +91,12 @@ class Cache:
         return value
 
     def get_str(self, key: str) -> str:
+        '''Converts a key to string format'''
         value = self._redis.get(key)
         return self.get(value, fn=lambda x: x.decode('utf-8'))
 
     def get_int(self, key: str) -> int:
+        '''Converts a key to int format'''
         value = self._redis.get(key)
         try:
             return self.get(value, fn=lambda x: int(x))
