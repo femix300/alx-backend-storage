@@ -31,7 +31,12 @@ class Cache:
         return value
 
     def get_str(self, key: str):
-        return self.get(key, fn=lambda x: x.decode())
+        value = self._redis.get(key)
+        return self.get(value, fn=lambda x: x.decode('utf-8'))
 
     def get_int(self, key: str):
-        return self.get(key, fn=lambda x: int(x))
+        value = self._redis.get(key)
+        try:
+            return self.get(value, fn=lambda x: int(x))
+        except Exception:
+            return 0
